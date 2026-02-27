@@ -85,6 +85,17 @@ jobs:
           sudo mv ipapatch.macos-arm64 /usr/local/bin/ipapatch
           sudo chmod +x /usr/local/bin/ipapatch
 
+      - name: Remove Watch and PlugIns
+        run: |
+          mkdir -p temp_ipa
+          unzip -q spotify.ipa -d temp_ipa
+          rm -rf temp_ipa/Payload/*.app/Watch
+          rm -rf temp_ipa/Payload/*.app/PlugIns
+          cd temp_ipa && zip -qr ../spotify_fixed.ipa Payload
+          cd ..
+          mv spotify_fixed.ipa spotify.ipa
+          rm -rf temp_ipa
+
       - name: Create EeveeSpotify Package
         run: |
           ivinject-arm64 spotify.ipa EeveeSpotify.ipa \
